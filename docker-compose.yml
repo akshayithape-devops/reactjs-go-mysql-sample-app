@@ -1,0 +1,57 @@
+# This is a docker-compose file for a 3-tier application consisting of a frontend, backend and database service.
+version: '3.8'
+
+services:
+
+# The frontend service is built using the Dockerfile located in the ./frontend directory, with the build context set to that directory. 
+# It is exposed on port 80 and restarts automatically. It depends on the backend service.
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - backend
+
+# The backend service is built using the Dockerfile located in the ./backend directory, with the build context set to that directory. 
+# It is exposed on port 9080 and restarts automatically. 
+# It depends on the database service. It also has environment variables set for the database host, port, user, password, and database name.
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=mysql987
+      - DB_NAME=userdb
+    ports:
+      - "9080:9080"
+    restart: always
+    depends_on:
+      - db
+
+# The database service uses the latest MySQL image, with a root password and database name set in the environment variables. 
+# It also sets up a volume for persistent data storage and mounts an initialization SQL script. It is exposed on port 3306.
+
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password --init-file /init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql987
+      MYSQL_DATABASE: userdb
+    volumes:
+      - my-data:/var/lib/mysql
+      - ./init.sql:/init.sql
+    ports:
+      - "3306:3306"
+
+# Lastly, there is a volume defined for the persistent data storage.
+
+volumes:
+  my-data:

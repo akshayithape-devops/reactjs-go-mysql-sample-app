@@ -1,0 +1,34 @@
+# Build Stage
+FROM golang:alpine3.17 as builder 
+# Use the official Golang Alpine 3.17 image as the base image for the build stage.
+
+WORKDIR /app
+# Set the working directory for the build stage to /app.
+
+COPY . . 
+# Copy the current directory (which contains the application code) to the build stage.
+
+RUN go mod init backend
+# Initialize a new Go module called "backend".
+
+RUN go get github.com/gorilla/mux && go get github.com/go-sql-driver/mysql && go get github.com/joho/godotenv
+# Download and install the required Go packages for the application.
+
+RUN go build main.go
+# Build the Go application, which produces an executable called "main".
+
+# Deploy Stage
+FROM alpine:latest
+# Use the latest Alpine image as the base image for the deploy stage.
+
+WORKDIR /
+# Set the working directory for the deploy stage to the root directory.
+
+COPY --from=builder /app/main /
+# Copy the "main" executable from the build stage to the root directory of the deploy stage.
+
+EXPOSE 9080
+# Expose port 9080 for the application.
+
+ENTRYPOINT [ "/main" ]
+# Set the command to run when the container starts to execute the "main" executable.

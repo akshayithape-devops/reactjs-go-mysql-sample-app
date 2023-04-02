@@ -1,0 +1,34 @@
+# Build Stage
+FROM node:16 as builder 
+# Use the official Node.js 16 image as the base image for the build stage.
+
+WORKDIR /app
+# Set the working directory for the build stage to /app.
+
+COPY . . 
+# Copy the current directory (which contains the application code) to the build stage.
+
+RUN npm install
+# Install the required Node.js packages for the application.
+
+RUN npm run build
+# Build the React application.
+
+# Deploy Stage
+FROM nginx:stable-alpine3.17
+# Use the official Nginx stable Alpine 3.17 image as the base image for the deploy stage.
+
+WORKDIR /usr/share/nginx/html
+# Set the working directory for the deploy stage to /usr/share/nginx/html.
+
+RUN rm -rf ./*
+# Remove any existing files in the default Nginx HTML directory.
+
+COPY --from=builder /app/build .
+# Copy the React build output from the build stage to the Nginx HTML directory.
+
+EXPOSE 80
+# Expose port 80 for the application.
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# Set the command to run when the container starts to run the Nginx server in the foreground.
