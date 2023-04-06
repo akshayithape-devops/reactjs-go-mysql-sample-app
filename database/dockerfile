@@ -1,0 +1,18 @@
+# Use the official MySQL image as the base image
+FROM mysql:latest
+
+# Copy the init.sql script to the docker-entrypoint-initdb.d directory
+# This script will be executed when the container is started for the first time
+COPY init.sql /docker-entrypoint-initdb.d/
+
+# Set the root password for MySQL server
+ENV MYSQL_ROOT_PASSWORD=mysql987
+
+# Create a new database called 'userdb'
+ENV MYSQL_DATABASE=userdb
+
+# Create a named volume to store the database data
+VOLUME my-data:/var/lib/mysql
+
+# Expose port 3306 to the host system
+EXPOSE 3306

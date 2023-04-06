@@ -32,3 +32,23 @@ Our Docker Compose setup provides a local development environment for our applic
 ```
 docker-compose up -d 
 ```
+
+### Build & Push Images To Docker Hub(ECS Demo) :
+
+#### Backend 
+
+```
+cd backend &&  docker buildx build --platform linux/amd64,linux/arm64 -f dockerfile -t akshayithape02/aws-ecs-demo-2-backend:latest --push .
+```
+
+#### Frontend 
+
+```
+cd backend &&  docker buildx build --platform linux/amd64,linux/arm64 -f dockerfile -t akshayithape02/aws-ecs-demo-2-frontend:latest --push .
+```
+
+#### Database 
+
+```
+cd backend &&  docker buildx build --platform linux/amd64,linux/arm64 -f dockerfile -t akshayithape02/aws-ecs-demo-2-db:latest --push .
+```

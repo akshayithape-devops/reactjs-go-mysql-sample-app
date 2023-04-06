@@ -40,18 +40,16 @@ services:
 # It also sets up a volume for persistent data storage and mounts an initialization SQL script. It is exposed on port 3306.
 
   db:
-    image: mysql:latest
-    command: --default-authentication-plugin=mysql_native_password --init-file /init.sql
-    environment:
-      MYSQL_ROOT_PASSWORD: mysql987
-      MYSQL_DATABASE: userdb
+    build:
+      context: ./database
+      dockerfile: dockerfile
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - my-data:/var/lib/mysql
-      - ./init.sql:/init.sql
+      - my-data-2:/var/lib/mysql
     ports:
       - "3306:3306"
 
 # Lastly, there is a volume defined for the persistent data storage.
 
 volumes:
-  my-data:
+  my-data-2:

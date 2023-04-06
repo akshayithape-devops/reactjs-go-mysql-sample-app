@@ -1,5 +1,3 @@
-create database userdb;
-
 use userdb;
 
 CREATE TABLE `users` (`id` bigint(20) UNSIGNED NOT NULL, `first_name` varchar(200) NOT NULL, `last_name` varchar(200) NOT NULL, `email` varchar(200) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
